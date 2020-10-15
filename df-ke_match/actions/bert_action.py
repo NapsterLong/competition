@@ -17,11 +17,8 @@
 
 """
 ```bash
-export GLUE_DIR=/path/to/glue
-export TASK_NAME=MRPC
-
 python actions/bert_action.py \
-  --model_name_or_path output/lm \
+  --model_name_or_path output/lm_bert_wwm \
   --task_name WNLI \
   --do_train \
   --do_eval \
@@ -29,21 +26,12 @@ python actions/bert_action.py \
   --data_dir datas/real \
   --max_seq_length 128 \
   --per_device_train_batch_size 32 \
-  --learning_rate 2e-5 \
-  --num_train_epochs 3.0 \
-  --output_dir output/bert
-  
-  python actions/bert_action.py \
-  --model_name_or_path output/bert \
-  --task_name WNLI \
-  --do_predict \
-  --data_dir datas/real \
-  --max_seq_length 128 \
-  --per_device_train_batch_size 32 \
   --per_device_eval_batch_size 64 \
   --learning_rate 2e-5 \
   --num_train_epochs 3.0 \
-  --output_dir output/bert 
+  --output_dir output/bert_wwm \
+  --logging_dir=logs/bert_wwm \
+  --logging_steps=100
 ```
 
 where task name can be one of CoLA, SST-2, MRPC, STS-B, QQP, MNLI, QNLI, RTE, WNLI.

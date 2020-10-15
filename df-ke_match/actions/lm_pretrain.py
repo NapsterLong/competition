@@ -22,11 +22,15 @@ using a masked language modeling (MLM) loss. XLNet is fine-tuned using a permuta
 """
 ```bash
 python actions/lm_pretrain.py \
-    --output_dir=output/lm \
-    --model_name_or_path="bert-base-chinese" \
+    --output_dir=output/lm_bert_wwm \
+    --model_name_or_path="hfl/chinese-bert-wwm-ext" \
     --do_train \
+    --per_device_train_batch_size=16 \
     --train_data_file=datas/train/lm_corpus.tsv \
-    --mlm
+    --mlm \
+    --line_by_line \
+    --logging_dir=logs/lm_bert_wwm \
+    --logging_steps=100
 ```
 """
 
@@ -43,7 +47,7 @@ from transformers import (
     CONFIG_MAPPING,
     MODEL_WITH_LM_HEAD_MAPPING,
     AutoConfig,
-    AutoModelForMaskedLM,
+    AutoModelWithLMHead,
     AutoTokenizer,
     DataCollatorForLanguageModeling,
     HfArgumentParser,
@@ -235,7 +239,7 @@ def main():
         )
 
     if model_args.model_name_or_path:
-        model = AutoModelForMaskedLM.from_pretrained(
+        model = AutoModelWithLMHead.from_pretrained(
             model_args.model_name_or_path,
             from_tf=bool(".ckpt" in model_args.model_name_or_path),
             config=config,
@@ -243,7 +247,7 @@ def main():
         )
     else:
         logger.info("Training new model from scratch")
-        model = AutoModelForMaskedLM.from_config(config)
+        model = AutoModelWithLMHead.from_config(config)
 
     model.resize_token_embeddings(len(tokenizer))
 
