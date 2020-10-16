@@ -56,8 +56,8 @@ from transformers import (
     glue_output_modes,
     glue_tasks_num_labels,
     set_seed,
+    RobertaTokenizer, AlbertTokenizer, XLNetTokenizer
 )
-
 
 logger = logging.getLogger(__name__)
 
@@ -97,10 +97,10 @@ def main():
         model_args, data_args, training_args = parser.parse_args_into_dataclasses()
 
     if (
-        os.path.exists(training_args.output_dir)
-        and os.listdir(training_args.output_dir)
-        and training_args.do_train
-        and not training_args.overwrite_output_dir
+            os.path.exists(training_args.output_dir)
+            and os.listdir(training_args.output_dir)
+            and training_args.do_train
+            and not training_args.overwrite_output_dir
     ):
         raise ValueError(
             f"Output directory ({training_args.output_dir}) already exists and is not empty. Use --overwrite_output_dir to overcome."
@@ -176,7 +176,8 @@ def main():
                 preds = np.argmax(preds, axis=1)
             else:  # regression
                 preds = np.squeeze(preds)
-            return glue_compute_metrics(task_name, preds, p.label_ids)
+            return {"acc": (preds == p.label_ids).mean()}
+            # return glue_compute_metrics(task_name, preds, p.label_ids)
 
         return compute_metrics_fn
 

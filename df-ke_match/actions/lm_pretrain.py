@@ -50,6 +50,7 @@ from transformers import (
     AutoModelWithLMHead,
     AutoTokenizer,
     DataCollatorForLanguageModeling,
+    DataCollatorForPermutationLanguageModeling,
     HfArgumentParser,
     LineByLineTextDataset,
     PreTrainedTokenizer,
@@ -274,12 +275,11 @@ def main():
         else None
     )
     if config.model_type == "xlnet":
-        pass
-        # data_collator = DataCollatorForPermutationLanguageModeling(
-        #     tokenizer=tokenizer,
-        #     plm_probability=data_args.plm_probability,
-        #     max_span_length=data_args.max_span_length,
-        # )
+        data_collator = DataCollatorForPermutationLanguageModeling(
+            tokenizer=tokenizer,
+            plm_probability=data_args.plm_probability,
+            max_span_length=data_args.max_span_length,
+        )
     else:
         data_collator = DataCollatorForLanguageModeling(
             tokenizer=tokenizer, mlm=data_args.mlm, mlm_probability=data_args.mlm_probability
