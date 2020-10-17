@@ -58,6 +58,12 @@ with open("../datas/real/test.tsv", "w", encoding="utf-8") as w:
         w.write("\t".join(line) + "\n")
 
 with open("../datas/train/lm_corpus.tsv", "w", encoding="utf-8") as writer:
+    for line in train_set:
+        if line[-1] == "1":
+            writer.write("\t".join(line[1:3]) + "\n")
+    for line in dev_test:
+        if line[-1] == "1":
+            writer.write("\t".join(line[1:3]) + "\n")
     for text in unsupervised_corpus:
         writer.write(text.strip() + "\n")
 

@@ -31,7 +31,7 @@ python3 actions/bert_action.py \
   --per_device_train_batch_size 8 \
   --per_device_eval_batch_size 16 \
   --learning_rate 2e-5 \
-  --num_train_epochs 10.0 \
+  --num_train_epochs 10 \
   --output_dir output/bert \
   --overwrite_output_dir \
   --logging_dir=logs/bert \
@@ -85,15 +85,15 @@ clue/roberta_chinese_base
 ## lm
 ```bash
 python3 actions/lm_pretrain.py \
-    --output_dir=output/lm_roberta_wwm \
+    --output_dir=output/lm_roberta \
     --model_name_or_path="clue/roberta_chinese_base" \
     --tokenizer_name="roberta-base"
     --do_train \
     --per_device_train_batch_size=8 \
     --train_data_file=datas/train/lm_corpus.tsv \
     --mlm \
-    --line_by_line \
-    --logging_dir=logs/lm_roberta_wwm \
+    --block_size=64 \
+    --logging_dir=logs/lm_roberta \
     --logging_steps=100 \
     --save_steps=1000
 ```
@@ -122,18 +122,20 @@ hfl/chinese-roberta-wwm-ext
 ```bash
 python3 actions/lm_pretrain.py \
     --output_dir=output/lm_roberta_wwm \
-    --model_name_or_path="hfl/chinese-roberta-wwm-ext" \
+    --model_name_or_path=hfl/chinese-roberta-wwm-ext \
     --do_train \
     --per_device_train_batch_size=8 \
     --train_data_file=datas/train/lm_corpus.tsv \
     --mlm \
-    --block_size=64 \
+    --line_by_line \
     --logging_dir=logs/lm_roberta_wwm \
     --logging_steps=100 \
     --overwrite_output_dir \
+    --num_train_epochs=10 \
     --save_steps=1000
 ```
 {'loss': 1.203857421875, 'learning\_rate': 7.970467321083984e-08, 'epoch': 2.9952177196073495, 'total\_flos': 6920633748857232, 'step': 11900}                                       
+{'loss': 1.061318359375, 'learning\_rate': 7.8003120124805e-08, 'epoch': 19.96879875195008, 'total\_flos': 12063670956552192, 'step': 12800}                             
 ## fine-tune
 ```bash
 python3 actions/bert_action.py \
@@ -147,13 +149,17 @@ python3 actions/bert_action.py \
   --per_device_train_batch_size 8 \
   --per_device_eval_batch_size 16 \
   --learning_rate 2e-5 \
-  --num_train_epochs 3.0 \
+  --num_train_epochs 10 \
   --output_dir output/roberta_wwm \
+  --overwrite_output_dir \
   --logging_dir=logs/roberta_wwm \
   --logging_steps=100
 ```
 {'eval\_loss': 0.30405679988861084, 'eval\_acc': 0.899, 'epoch': 3.0, 'total_flos': 4850406590538240, 'step': 2574}                                                                  
 predict_result:0.76195453358
+
+{'eval\_loss': 0.7896302738189698, 'eval\_acc': 0.889, 'epoch': 10.0, 'total_flos': 16168021968460800, 'step': 8580}                                                     
+predict_result:0.75230566535
 
 # albert
 voidful/albert_chinese_base
@@ -161,8 +167,8 @@ voidful/albert_chinese_base
 ```bash
 python3 actions/lm_pretrain.py \
     --output_dir=output/lm_albert \
-    --model_name_or_path="voidful/albert_chinese_base" \
-    --tokenizer_name="albert-base-v2" \
+    --model_name_or_path=voidful/albert_chinese_base \
+    --tokenizer_name=albert-base-v2 \
     --do_train \
     --per_device_train_batch_size=8 \
     --train_data_file=datas/train/lm_corpus.tsv \
